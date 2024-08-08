@@ -16,7 +16,7 @@ const rate = computed(() => {
     sum += activeElement.value.rates[i]
   }
   if (sum > 0) {
-    return sum
+    return sum / activeElement.value.rates.length
   } else {
     return 'Pas encore de like'
   }
@@ -38,13 +38,13 @@ const rate = computed(() => {
       <p class="author" v-if="activeElement.author !== undefined">
         {{ activeElement.author.name }}
       </p>
-      <p>{{ rate }}</p>
+      <p><font-awesome-icon :icon="['fas', 'thumbs-up']" v-if="rate > 0" /> {{ rate }}</p>
     </div>
     <div v-else-if="activeElement.category === 'livre'">
       <h2>{{ activeElement.title }}</h2>
       <p>{{ activeElement.synopsis }}</p>
       <p class="author">{{ activeElement.author }}</p>
-      <p>{{ rate }}</p>
+      <p><font-awesome-icon :icon="['fas', 'thumbs-up']" v-if="rate > 0" /> {{ rate }}</p>
       <p class="badge" v-if="activeElement.numberOfPage < 250">Petit livre</p>
     </div>
     <h1 v-else>Faites votre choix</h1>

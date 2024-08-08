@@ -25,26 +25,90 @@ const rate = computed(() => {
 
 <template>
   <header>
-    <button v-for="element in itemsArray" :key="element.id" @click="pushElement(element)">
-      {{ element.title }} <span>{{ element.category }}</span>
-    </button>
+    <nav>
+      <button v-for="element in itemsArray" :key="element.id" @click="pushElement(element)">
+        {{ element.title }} <span>({{ element.category }})</span>
+      </button>
+    </nav>
   </header>
   <main>
     <div v-if="activeElement.category === 'article'">
       <h2>{{ activeElement.title }}</h2>
       <p>{{ activeElement.content }}</p>
-      <p v-if="activeElement.author !== undefined">{{ activeElement.author.name }}</p>
+      <p class="author" v-if="activeElement.author !== undefined">
+        {{ activeElement.author.name }}
+      </p>
       <p>{{ rate }}</p>
     </div>
     <div v-else-if="activeElement.category === 'livre'">
       <h2>{{ activeElement.title }}</h2>
       <p>{{ activeElement.synopsis }}</p>
-      <p>{{ activeElement.author }}</p>
+      <p class="author">{{ activeElement.author }}</p>
       <p>{{ rate }}</p>
-      <span v-if="activeElement.numberOfPage < 250">Petit livre</span>
+      <p class="badge" v-if="activeElement.numberOfPage < 250">Petit livre</p>
     </div>
-    <div v-else><h1>Faites votre choix</h1></div>
+    <h1 v-else>Faites votre choix</h1>
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: var(--header-height);
+}
+nav {
+  display: flex;
+  gap: 20px;
+}
+button {
+  background-color: white;
+  padding: 10px;
+  border: 2px solid var(--yellow);
+  color: var(--yellow);
+  font-weight: bold;
+}
+span {
+  color: black;
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+  height: calc(100vh - var(--header-height));
+}
+div {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  gap: 20px;
+  background-color: #ffdf9c;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+.author {
+  text-align: right;
+}
+.badge {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: var(--yellow);
+  display: flex;
+  text-align: center;
+  align-items: center;
+  color: white;
+  border-radius: 50%;
+  right: -20px;
+  top: -20px;
+}
+</style>

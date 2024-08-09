@@ -1,13 +1,15 @@
 <script setup>
 import { ref, computed } from 'vue'
-import itemsArray from './assets/data.json'
+
+import Article from './components/Article.vue'
+import Book from './components/Book.vue'
+import Header from './components/Header.vue'
 
 const activeElement = ref({})
 
 // Lors du clic sur un bouton dans header, son objet est envoyé dans activeElement.
 const pushElement = (object) => {
   activeElement.value = object
-  //   console.log(activeElement.value.category)
 }
 
 const rate = computed(() => {
@@ -25,58 +27,39 @@ const rate = computed(() => {
 
 <template>
   <header>
-    <nav>
-      <button v-for="element in itemsArray" :key="element.id" @click="pushElement(element)">
-        {{ element.title }} <span>({{ element.category }})</span>
-      </button>
-    </nav>
+    <Header @pushElement="pushElement" />
   </header>
   <main>
-    <div v-if="activeElement.category === 'article'">
-      <h2>{{ activeElement.title }}</h2>
-      <p>{{ activeElement.content }}</p>
-      <p class="author" v-if="activeElement.author !== undefined">
-        {{ activeElement.author.name }}
-      </p>
-      <p><font-awesome-icon :icon="['fas', 'thumbs-up']" v-if="rate > 0" /> {{ rate }}</p>
-    </div>
-    <div v-else-if="activeElement.category === 'livre'">
-      <h2>{{ activeElement.title }}</h2>
-      <p>{{ activeElement.synopsis }}</p>
-      <p class="author">{{ activeElement.author }}</p>
-      <p><font-awesome-icon :icon="['fas', 'thumbs-up']" v-if="rate > 0" /> {{ rate }}</p>
-      <p class="badge" v-if="activeElement.numberOfPage < 250">Petit livre</p>
-    </div>
+    <Article
+      v-if="activeElement.category === 'article'"
+      :active-element="activeElement"
+      :rate="rate"
+    />
+
+    <Book
+      v-else-if="activeElement.category === 'livre'"
+      :active-element="activeElement"
+      :rate="rate"
+    />
+
     <h1 v-else>Faites votre choix</h1>
+    <button @click="activeElement = {}">Reset</button>
   </main>
 </template>
 
 <style scoped>
 header {
   display: flex;
+  gap: 20px;
   justify-content: center;
   align-items: center;
   height: var(--header-height);
 }
-nav {
-  display: flex;
-  gap: 20px;
-}
-button {
-  background-color: white;
-  padding: 10px;
-  border: 2px solid var(--yellow);
-  color: var(--yellow);
-  font-weight: bold;
-}
-span {
-  color: black;
-}
 main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-
   gap: 20px;
   height: calc(100vh - var(--header-height));
 }
@@ -90,25 +73,14 @@ div {
   border-radius: 20px;
   position: relative;
 }
-h2 {
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-}
-.author {
-  text-align: right;
-}
-.badge {
+button {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  right: 40px;
+  bottom: 40px;
   background-color: var(--yellow);
-  display: flex;
-  text-align: center;
-  align-items: center;
+  border: none;
+  padding: 5px 10px;
   color: white;
-  border-radius: 50%;
-  right: -20px;
-  top: -20px;
+  border-radius: 5px;
 }
 </style>
